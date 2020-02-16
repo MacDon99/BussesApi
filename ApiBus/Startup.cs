@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiBus.Models.ListsDownloader;
+using ApiBus.Services.BusChoser;
+using ApiBus.Services.ListsDownloader;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,7 +28,8 @@ namespace ApiBus
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSingleton<IListDownloaderService, ListDownloaderService>();
+            services.AddSingleton<IListDownloader, ListDownloader>();
+            services.AddSingleton<IBusChoser, BusChoser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

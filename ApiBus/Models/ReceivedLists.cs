@@ -5,28 +5,16 @@ using System.Threading.Tasks;
 
 namespace ApiBus.Models
 {
-    public class ApiModel
+    public class ReceivedLists
     {
+        public List<List> ListsOfBusses { get; set; }
+        public List<string> Legend { get; set; }
+        public List<string> StationsAndTimesToTravel { get; set; }
 
-        public string TitleOne { get; set; }
-        public List<string> ListOne { get; set; }
-        public string TitleTwo { get; set; }
-        public List<string> ListTwo { get; set; }
-        public string TitleThree { get; set; }
-        public List<string> ListThree { get; set; }
-        public string TitleFour { get; set; }
-        public List<string> ListFour { get; set; }
-        public List<string> ListLegend { get; set; }
-        public List<string> ListStationsAndTimes { get; set; }
-
-        public ApiModel()
+        public ReceivedLists()
         {
-            ListOne = new List<string>();
-            ListTwo = new List<string>();
-            ListThree = new List<string>();
-            ListFour = new List<string>();
-            ListLegend = new List<string>();
-            ListStationsAndTimes = new List<string>();
+            Legend = new List<string>();
+            StationsAndTimesToTravel = new List<string>();
         }
     }
         
