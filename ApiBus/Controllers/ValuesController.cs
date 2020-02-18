@@ -27,7 +27,7 @@ namespace ApiBus.Controllers
         }
 
         // GET api/values
-        [HttpGet("Bus={busNumber}&direction={direction}&stationNumber={stationNumber}")]
+        [HttpGet("{busNumber}/{direction}/{stationNumber}")]
         public JsonResult Get(int busNumber, int direction, int stationNumber)
         {
             var result = new JsonResult(_listService.GetListsOfBusses(_busChoser.GetSiteString(busNumber, direction ,stationNumber)));
