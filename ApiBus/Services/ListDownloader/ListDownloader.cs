@@ -143,9 +143,7 @@ namespace ApiBus.Services.ListsDownloader
 
         private void AddListsToTitles(ref List<List> ListOfBussesAndEverything, List<string> TotaLList, ref int position, int CurrentList)
         {
-            //var ListOfBussesAndEverything = new List();
             var count = TotaLList.Count();
-            //int position = 0;
             if (!(ListOfBussesAndEverything[CurrentList].Period is null))
                 {
                     for (int i = position; i < count; i++)
@@ -154,8 +152,6 @@ namespace ApiBus.Services.ListsDownloader
                         if (Convert.ToInt32("" + TotaLList[i][0] + TotaLList[i][1] + TotaLList[i][3] + TotaLList[i][4]) < Convert.ToInt32("" + TotaLList[i + 1][0] + TotaLList[i + 1][1] + TotaLList[i + 1][3] + TotaLList[i + 1][4]))
                         {
                             ListOfBussesAndEverything[CurrentList].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
-                            // List[0].Add(TotaLList[i]);
-
                         }
                         else
                         {
