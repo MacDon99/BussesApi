@@ -13,8 +13,8 @@ namespace ApiBus.Services.ListsDownloader
     {
         public ReceivedLists GetListsOfBusses(string site)
         {
-            WebClient client = new WebClient();
-            ReceivedLists model = new ReceivedLists();
+            var client = new WebClient();
+            var model = new ReceivedLists();
             var htmlDocument = new HtmlDocument();
             try
             {
@@ -26,8 +26,6 @@ namespace ApiBus.Services.ListsDownloader
                 return model;
             }
             
-            
-
             //gets all available lists of periods and times that busses are travelling
             model.ListsOfBusses = GetListsWithTitles(htmlDocument);
             //gets lists of names and times to travel to stations that are farer than a chosen one
@@ -42,11 +40,11 @@ namespace ApiBus.Services.ListsDownloader
         private List<string> GetListOfStationsAndTimesToTravel(HtmlDocument htmlDocument)
         {
             string innerText;
-            List<string> Times = new List<string>();
-            List<string> Stations = new List<string>();
-            List<string> ListOfStationsAndTimesToGet = new List<string>();
+            var Times = new List<string>();
+            var Stations = new List<string>();
+            var ListOfStationsAndTimesToGet = new List<string>();
 
-            foreach (var td in htmlDocument.DocumentNode.SelectNodes("//td"))
+            foreach (HtmlNode td in htmlDocument.DocumentNode.SelectNodes("//td"))
             {
                 HtmlAttribute classAttribute = td.Attributes["class"];
 
@@ -64,8 +62,14 @@ namespace ApiBus.Services.ListsDownloader
                     }
                 }
             }
-
             Times.Add("");
+
+            ListOfStationsAndTimesToGet = GetValidList(Times, Stations);
+            return ListOfStationsAndTimesToGet;
+        }
+        private List<string> GetValidList(List<string> Times, List<string> Stations )
+        {
+            var ListOfStationsAndTimesToGet = new List<string>();
             for (int i = 0; i < Times.Count(); i++)
             {
 
@@ -82,16 +86,13 @@ namespace ApiBus.Services.ListsDownloader
                     break;
                 }
             }
-                
-       
-            return ListOfStationsAndTimesToGet;
+        return ListOfStationsAndTimesToGet;
         }
-
         private List<string> GetTotalListOfTimes(HtmlDocument htmlDocument)
         {
             string innerText;
-            List<string> TotalListOfTimes = new List<string>();
-            foreach (var td in htmlDocument.DocumentNode.SelectNodes("//td"))
+            var TotalListOfTimes = new List<string>();
+            foreach (HtmlNode td in htmlDocument.DocumentNode.SelectNodes("//td"))
             {
                 HtmlAttribute classAttribute = td.Attributes["class"];
 
@@ -101,7 +102,7 @@ namespace ApiBus.Services.ListsDownloader
                     {
                         innerText = td.InnerText.ToString();
                         var search = @"(?:0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\s[A-Z])?";
-                        Regex rgx = new Regex(search);
+                        var rgx = new Regex(search);
 
                         foreach (Match match in rgx.Matches(innerText))
                         {
@@ -117,7 +118,7 @@ namespace ApiBus.Services.ListsDownloader
         private List<string> GetListsOfTitles(HtmlDocument htmlDocument)
         {
             var allNodes = htmlDocument.DocumentNode.SelectNodes("//h4");
-            List<string> Titles = new List<string>();
+            var Titles = new List<string>();
             string innerText;
             try
             {
@@ -140,47 +141,25 @@ namespace ApiBus.Services.ListsDownloader
             return Titles;
         }
 
-        private List<List> GetListsWithTitles(HtmlDocument htmlDocument)
+        private void AddListsToTitles(ref List<List> ListOfBussesAndEverything, List<string> TotaLList, ref int position, int CurrentList)
         {
-            List<List> ListOfBussesAndEverything = new List<List>();
-            List<string> TotaLList = GetTotalListOfTimes(htmlDocument);
-            List<string> Titles = GetListsOfTitles(htmlDocument);
-            List Lista = new List();
-            int position = 0;
+            //var ListOfBussesAndEverything = new List();
             var count = TotaLList.Count();
-
-            try
-            {
-                Lista.Period = Titles[2];
-                ListOfBussesAndEverything.Add(Lista);
-                Lista = new List();
-                Lista.Period = Titles[3];
-                ListOfBussesAndEverything.Add(Lista);
-                Lista = new List();
-                Lista.Period = Titles[4];
-                ListOfBussesAndEverything.Add(Lista);
-                Lista = new List();
-                Lista.Period = Titles[5];
-                ListOfBussesAndEverything.Add(Lista);
-            }
-            catch { }
-            //list one
-            try
-            {
-                if (!(ListOfBussesAndEverything[0].Period is null))
+            //int position = 0;
+            if (!(ListOfBussesAndEverything[CurrentList].Period is null))
                 {
-                    for (int i = 0; i < count; i++)
+                    for (int i = position; i < count; i++)
                     {
                         //jeżeli liczba po konwersji z godziny np 14:10 -> 1410 jest mniejsza od poprzedniej, to działa dalej
                         if (Convert.ToInt32("" + TotaLList[i][0] + TotaLList[i][1] + TotaLList[i][3] + TotaLList[i][4]) < Convert.ToInt32("" + TotaLList[i + 1][0] + TotaLList[i + 1][1] + TotaLList[i + 1][3] + TotaLList[i + 1][4]))
                         {
-                            ListOfBussesAndEverything[0].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
+                            ListOfBussesAndEverything[CurrentList].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
                             // List[0].Add(TotaLList[i]);
 
                         }
                         else
                         {
-                            ListOfBussesAndEverything[0].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
+                            ListOfBussesAndEverything[CurrentList].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
                             position = i + 1;
                             break;
 
@@ -188,78 +167,37 @@ namespace ApiBus.Services.ListsDownloader
 
                     }
                 }
-            }
-            catch { }
-            //list two
+        }
+        private List<List> GetListsWithTitles(HtmlDocument htmlDocument)
+        {
+            var ListOfBussesAndEverything = new List<List>();
+            var TotaLList = GetTotalListOfTimes(htmlDocument);
+            var Titles = GetListsOfTitles(htmlDocument);
+            var Lista = new List();
+            int position = 0;
+            var count = TotaLList.Count();
+
             try
             {
-                if (!(ListOfBussesAndEverything[1].Period is null))
-                {
-                    for (int i = position; i < count; i++)
-                    {
-                        if (Convert.ToInt32("" + TotaLList[i][0] + TotaLList[i][1] + TotaLList[i][3] + TotaLList[i][4]) < Convert.ToInt32("" + TotaLList[i + 1][0] + TotaLList[i + 1][1] + TotaLList[i + 1][3] + TotaLList[i + 1][4]))
-                        {
-                            ListOfBussesAndEverything[1].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
-
-                        }
-                        else
-                        {
-                            ListOfBussesAndEverything[1].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
-                            position = i + 1;
-                            break;
-
-                        }
-
-                    }
-                }
-            }
-            catch { }
-            //list three
-            try
-            {
-                if (!(ListOfBussesAndEverything[0].Period is null))
-                {
-                    for (int i = position; i < count; i++)
-                    {
-                        if (Convert.ToInt32("" + TotaLList[i][0] + TotaLList[i][1] + TotaLList[i][3] + TotaLList[i][4]) < Convert.ToInt32("" + TotaLList[i + 1][0] + TotaLList[i + 1][1] + TotaLList[i + 1][3] + TotaLList[i + 1][4]))
-                        {
-                            ListOfBussesAndEverything[2].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
-
-                        }
-                        else
-                        {
-                            ListOfBussesAndEverything[2].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
-                            position = i + 1;
-                            break;
-
-                        }
-
-                    }
-                }
-            }
-            catch { }
-            //list four
-            try
-            {
-                if (!(ListOfBussesAndEverything[3].Period is null))
-                {
-                    for (int i = position; i < count; i++)
-                    {
-                        if (Convert.ToInt32("" + TotaLList[i][0] + TotaLList[i][1] + TotaLList[i][3] + TotaLList[i][4]) < Convert.ToInt32("" + TotaLList[i + 1][0] + TotaLList[i + 1][1] + TotaLList[i + 1][3] + TotaLList[i + 1][4]))
-                        {
-                            ListOfBussesAndEverything[3].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
-
-                        }
-                        else
-                        {
-                            ListOfBussesAndEverything[3].ListOfBussesInChosenPeriod.Add(TotaLList[i]);
-                            position = i + 1;
-                            break;
-
-                        }
-
-                    }
-                }
+                //list one
+                Lista.Period = Titles[2];
+                ListOfBussesAndEverything.Add(Lista);
+                AddListsToTitles(ref ListOfBussesAndEverything, TotaLList, ref position, 0);
+                //list two
+                Lista = new List();
+                Lista.Period = Titles[3];
+                ListOfBussesAndEverything.Add(Lista);
+                AddListsToTitles(ref ListOfBussesAndEverything, TotaLList, ref position, 1);
+                //list three
+                Lista = new List();
+                Lista.Period = Titles[4];
+                ListOfBussesAndEverything.Add(Lista);
+                AddListsToTitles(ref ListOfBussesAndEverything, TotaLList, ref position, 2);
+                //list four
+                Lista = new List();
+                Lista.Period = Titles[5];
+                ListOfBussesAndEverything.Add(Lista);
+                AddListsToTitles(ref ListOfBussesAndEverything, TotaLList, ref position, 3);
             }
             catch { }
             return ListOfBussesAndEverything;
@@ -267,16 +205,16 @@ namespace ApiBus.Services.ListsDownloader
 
         private List<string> GetLegend(HtmlDocument htmlDocument)
         {
-            List<string> Legend = new List<string>();
+            var Legend = new List<string>();
             string innerText;
-            var dl = htmlDocument.DocumentNode.SelectNodes("//dl");
+            var NodeDL = htmlDocument.DocumentNode.SelectNodes("//dl");
             try
             {
-                var inner = dl[0].InnerHtml;
+                var inner = NodeDL[0].InnerHtml;
                 var doc = new HtmlDocument();
                 doc.LoadHtml(inner);
 
-                foreach (var dt in doc.DocumentNode.SelectNodes("//dt"))
+                foreach (HtmlNode dt in doc.DocumentNode.SelectNodes("//dt"))
                 {
                     innerText = dt.InnerText.ToString().Trim();
                     Legend.Add(innerText);
@@ -284,15 +222,8 @@ namespace ApiBus.Services.ListsDownloader
 
                 for (int i = 0; i < Legend.Count(); i++)
                 {
-                    try
-                    {
                         var node = doc.DocumentNode.SelectNodes("//dd")[i];
                         Legend[i] += " " + node.InnerText.ToString().Trim();
-                    }
-                    catch
-                    {
-                        break;
-                    }
                 }
             }
             catch { }

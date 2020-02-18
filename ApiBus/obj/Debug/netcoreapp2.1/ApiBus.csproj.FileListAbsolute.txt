@@ -26,3 +26,17 @@ C:\Users\macie\Desktop\BussesApi_New\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.runti
 C:\Users\macie\Desktop\BussesApi_New\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.dll
 C:\Users\macie\Desktop\BussesApi_New\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.pdb
 C:\Users\macie\Desktop\BussesApi_New\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.RazorTargetAssemblyInfo.cache
+C:\Users\macie\BussesApi\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.deps.json
+C:\Users\macie\BussesApi\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.runtimeconfig.json
+C:\Users\macie\BussesApi\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.runtimeconfig.dev.json
+C:\Users\macie\BussesApi\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.dll
+C:\Users\macie\BussesApi\ApiBus\bin\Debug\netcoreapp2.1\ApiBus.pdb
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.csprojAssemblyReference.cache
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.csproj.CoreCompileInputs.cache
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.RazorAssemblyInfo.cache
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.RazorAssemblyInfo.cs
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.AssemblyInfoInputs.cache
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.AssemblyInfo.cs
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.RazorTargetAssemblyInfo.cache
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.dll
+C:\Users\macie\BussesApi\ApiBus\obj\Debug\netcoreapp2.1\ApiBus.pdb
