@@ -5,7 +5,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ApiBus.Models;
-using ApiBus.Models.ListsDownloader;
+using ApiBus.Services.BusChoser;
+using ApiBus.Services.ListsDownloader;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -16,50 +17,21 @@ namespace ApiBus.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IListDownloaderService _listService;
-        public ValuesController(IListDownloaderService service)
+        private readonly IListDownloader _listService;
+        private readonly IBusChoser _busChoser;
+
+        public ValuesController(IListDownloader service, IBusChoser busChoser)
         {
             _listService = service;
+            _busChoser = busChoser;
         }
 
         // GET api/values
-        [HttpGet]
-        public JsonResult Get()
+        [HttpGet("Bus={busNumber}&direction={direction}&stationNumber={stationNumber}")]
+        public JsonResult Get(int busNumber, int direction, int stationNumber)
         {
-
-            
-           // Console.ReadKey();
-            var result = new JsonResult(_listService.GetListsOfBusses(1,1));
-
-          //  var xd = JsonConvert.SerializeObject(model);
-            //var p = Convert.
+            var result = new JsonResult(_listService.GetListsOfBusses(_busChoser.GetSiteString(busNumber, direction ,stationNumber)));
             return result;
-            // return new string[] { "value1", "value2" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
